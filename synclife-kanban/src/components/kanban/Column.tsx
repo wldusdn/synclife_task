@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Task, TaskStatus } from '../../types/task';
 import TaskCard from './TaskCard';
 
@@ -10,8 +11,32 @@ interface ColumnProps {
 }
 
 const Column = ({ title, tasks, status, onStatusChange, onAddClick }: ColumnProps) => {
+  const [isOver, setIsOver] = useState(false);
+  
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsOver(false); //
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    setIsOver(false);
+    const taskId = e.dataTransfer.getData('taskId');
+    onStatusChange(taskId, status);
+  };
+  
   return (
-    <div className="bg-blue-200 rounded-xl p-4 flex flex-col gap-4">
+    <div 
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`
+        bg-blue-200 rounded-xl p-4 flex flex-col gap-4 min-h-[500px] transition-all duration-200
+        ${isOver ? 'bg-blue-300 ring-2 ring-blue-400 ring-inset' : ''} // 6. 하이라이트 스타일
+      `}>
       <div className="flex justify-between items-center px-2">
         <div className='flex gap-2'>
           <h2 className="font-bold text-lg">
@@ -34,7 +59,6 @@ const Column = ({ title, tasks, status, onStatusChange, onAddClick }: ColumnProp
           <TaskCard 
             key={task.id} 
             task={task} 
-            onStatusChange={onStatusChange} 
           />
         ))}
         {tasks.length === 0 && (
