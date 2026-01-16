@@ -54,5 +54,14 @@ export const useTasks = () => {
     }
   };
 
-  return { tasks, updateTaskStatus, addTask, deleteTask };
+  const editTask = (id: string, updates: Partial<Task>) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id 
+        ? { ...task, ...updates, updatedAt: new Date().toISOString() } 
+        : task
+    );
+    saveTasks(updatedTasks);
+  };
+
+  return { tasks, updateTaskStatus, addTask, deleteTask, editTask};
 };

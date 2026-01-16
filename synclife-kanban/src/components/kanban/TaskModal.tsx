@@ -1,3 +1,4 @@
+import type { Task } from '../../types/task';
 import { useState } from 'react';
 import type { TaskPriority, TaskStatus } from '../../types/task';
 
@@ -5,13 +6,15 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (title: string, desciption:string, priority: TaskPriority, status: TaskStatus) => void;
+  onUpdate: (id: string, updates: Partial<Task>) => void;
+  editingTask: Task | null;
   initialStatus: TaskStatus;
 }
 
-const AddTaskModal = ({ isOpen, onClose, onAdd, initialStatus }: Props) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState<TaskPriority>('medium');
+const TaskModal = ({ isOpen, onClose, onAdd, onUpdate, editingTask, initialStatus }: Props) => {
+  const [title, setTitle] = useState(editingTask?.title || '');
+  const [description, setDescription] = useState(editingTask?.description || '');
+  const [priority, setPriority] = useState<TaskPriority>(editingTask?.priority || 'medium');
 
   if (!isOpen) return null;
 
@@ -21,17 +24,18 @@ const AddTaskModal = ({ isOpen, onClose, onAdd, initialStatus }: Props) => {
         alert('제목은 필수 입력 사항입니다.');
         return;
     }
-    const taskDescription = description.trim() || ''; 
-    onAdd(title, taskDescription, priority, initialStatus);
-    setTitle('');
-    setDescription('');
+    if (editingTask) {
+      onUpdate(editingTask.id, { title, description, priority });
+    } else {
+      onAdd(title, description, priority, initialStatus);
+    }
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-        <h2 className="text-xl font-bold mb-4">{initialStatus} 추가</h2>
+        <h2 className="text-xl font-bold mb-4">{editingTask? '태스크 수정':`${initialStatus} 추가`}</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">제목 (필수)</label>
@@ -66,7 +70,7 @@ const AddTaskModal = ({ isOpen, onClose, onAdd, initialStatus }: Props) => {
           </div>
           <div className="flex justify-end gap-2 mt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">취소</button>
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold">추가하기</button>
+            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold">{editingTask? '수정하기': '추가하기'}</button>
           </div>
         </form>
       </div>
@@ -74,4 +78,4 @@ const AddTaskModal = ({ isOpen, onClose, onAdd, initialStatus }: Props) => {
   );
 };
 
-export default AddTaskModal;
+export default TaskModal;

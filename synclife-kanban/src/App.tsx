@@ -1,16 +1,23 @@
+import type { Task } from './types/task';
 import { useTasks } from './hooks/useTasks';
 import Column from './components/kanban/Column';
 import { useState } from 'react';
-import AddTaskModal from './components/kanban/AddTaskModal';
+import TaskModal from './components/kanban/TaskModal';
 import type { TaskStatus } from './types/task';
 
 const KanbanBoard = () => {
-  const { tasks, updateTaskStatus, addTask, deleteTask } = useTasks();
+  const { tasks, updateTaskStatus, addTask, deleteTask, editTask } = useTasks();
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetStatus, setTargetStatus] = useState<TaskStatus>('todo');
 
   const openModal = (status: TaskStatus) => {
     setTargetStatus(status);
+    setIsModalOpen(true);
+  };
+
+  const handleEditClick = (task: Task) => {
+    setEditingTask(task);
     setIsModalOpen(true);
   };
 
@@ -32,6 +39,7 @@ const KanbanBoard = () => {
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('todo')}
           onDelete = {deleteTask}
+          onEdit={handleEditClick}
         />
         <Column 
           title="In Progress" 
@@ -39,7 +47,8 @@ const KanbanBoard = () => {
           status="in-progress" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('in-progress')}
-          onDelete = {deleteTask} 
+          onDelete = {deleteTask}
+          onEdit={handleEditClick} 
         />
         <Column 
           title="Done" 
@@ -47,13 +56,20 @@ const KanbanBoard = () => {
           status="done" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('done')}
-          onDelete = {deleteTask} 
+          onDelete = {deleteTask}
+          onEdit={handleEditClick} 
         />
       </main>
-      <AddTaskModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onAdd={addTask} 
+      <TaskModal
+        key={editingTask?.id || 'new'} 
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingTask(null);
+        }} 
+        onAdd={addTask}
+        onUpdate={editTask}
+        editingTask={editingTask}  
         initialStatus={targetStatus} 
       />
     </div>
