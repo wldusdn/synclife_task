@@ -38,7 +38,6 @@ const KanbanBoard = () => {
           status="todo" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('todo')}
-          onDelete = {deleteTask}
           onEdit={handleEditClick}
         />
         <Column 
@@ -47,7 +46,6 @@ const KanbanBoard = () => {
           status="in-progress" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('in-progress')}
-          onDelete = {deleteTask}
           onEdit={handleEditClick} 
         />
         <Column 
@@ -56,7 +54,6 @@ const KanbanBoard = () => {
           status="done" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('done')}
-          onDelete = {deleteTask}
           onEdit={handleEditClick} 
         />
       </main>
@@ -69,6 +66,7 @@ const KanbanBoard = () => {
         }} 
         onAdd={addTask}
         onUpdate={editTask}
+        onDelete={deleteTask}
         editingTask={editingTask}  
         initialStatus={targetStatus} 
       />

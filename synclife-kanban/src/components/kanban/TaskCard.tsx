@@ -1,14 +1,11 @@
 import type { Task } from '../../types/task';
-import deleteIcon from "../../assets/delete.png";
-import editIcon from "../../assets/edit.png";
 
 interface TaskCardProps {
   task: Task;
-  onDelete: (id: string) => void;
-  onEdit: (task: Task) => void;
+  onTaskClick: (task: Task) => void;
 }
 
-const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
+const TaskCard = ({ task, onTaskClick }: TaskCardProps) => {
   const priorityMap = {
     high: { label: 'High', color: 'bg-red-100 text-red-700' },
     medium: { label: 'Medium', color: 'bg-yellow-100 text-yellow-700' },
@@ -25,6 +22,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
     <div
       draggable
       onDragStart={handleDragStart}
+      onClick={() => onTaskClick(task)}
       className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow hover:bg-blue-100 active:cursor-grabbing cursor-pointer group">
       <div className="flex justify-between items-start mb-2">
         <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${color}`}>
@@ -34,32 +32,6 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
           {new Date(task.createdAt).toLocaleDateString()}
         </span>
       </div>
-      <div className="absolute bottom-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(task);
-            }}
-            onDragStart={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-            className="p-1 hover:bg-gray-100 rounded text-gray-500">
-            <img src={editIcon} alt="수정" className="w-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(task.id);
-            }}
-            onDragStart={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }} 
-            className="p-1 hover:bg-red-50 rounded text-red-400">
-            <img src={deleteIcon} alt="삭제" className="w-4" />
-          </button>
-        </div>
       <h3 className="font-semibold text-gray-800">
         {task.title}
       </h3>

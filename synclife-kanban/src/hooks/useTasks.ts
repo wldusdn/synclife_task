@@ -49,9 +49,7 @@ export const useTasks = () => {
   };
 
   const deleteTask = (id:string) => {
-    if (window.confirm('정말 이 태스크를 삭제하시겠습니까?')){
-      saveTasks(tasks.filter(task => task.id !== id))
-    }
+    saveTasks(tasks.filter(task => task.id !== id))
   };
 
   const editTask = (id: string, updates: Partial<Task>) => {
