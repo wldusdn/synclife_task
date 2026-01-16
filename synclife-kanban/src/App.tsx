@@ -1,8 +1,18 @@
 import { useTasks } from './hooks/useTasks';
 import Column from './components/kanban/Column';
+import { useState } from 'react';
+import AddTaskModal from './components/kanban/AddTaskModal';
+import type { TaskStatus } from './types/task';
 
 const KanbanBoard = () => {
-  const { tasks, updateTaskStatus } = useTasks();
+  const { tasks, updateTaskStatus, addTask } = useTasks();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [targetStatus, setTargetStatus] = useState<TaskStatus>('todo');
+
+  const openModal = (status: TaskStatus) => {
+    setTargetStatus(status);
+    setIsModalOpen(true);
+  };
 
   const todoTasks = tasks.filter((t) => t.status === 'todo');
   const inProgressTasks = tasks.filter((t) => t.status === 'in-progress');
@@ -20,20 +30,29 @@ const KanbanBoard = () => {
           tasks={todoTasks} 
           status="todo" 
           onStatusChange={updateTaskStatus}
+          onAddClick={() => openModal('todo')}
         />
         <Column 
           title="In Progress" 
           tasks={inProgressTasks} 
           status="in-progress" 
-          onStatusChange={updateTaskStatus} 
+          onStatusChange={updateTaskStatus}
+          onAddClick={() => openModal('in-progress')} 
         />
         <Column 
           title="Done" 
           tasks={doneTasks} 
           status="done" 
-          onStatusChange={updateTaskStatus} 
+          onStatusChange={updateTaskStatus}
+          onAddClick={() => openModal('done')} 
         />
       </main>
+      <AddTaskModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAdd={addTask} 
+        initialStatus={targetStatus} 
+      />
     </div>
   );
 };

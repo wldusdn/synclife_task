@@ -34,8 +34,8 @@ const TaskCard = ({ task, onStatusChange }: TaskCardProps) => {
       <h3 className="font-semibold text-gray-800">
         {task.title}
       </h3>
-      {task.description && (
-        <p className="text-sm text-gray-500 mt-1">{task.description}</p>
+      {task.description && task.description.trim() !== '' && (
+        <p className="text-sm text-gray-500 mt-1 line-clamp-2 break-all">{task.description}</p>
       )}
     </div>
   );

@@ -6,9 +6,10 @@ interface ColumnProps {
   tasks: Task[];
   status: TaskStatus;
   onStatusChange: (id: string, status: TaskStatus) => void;
+  onAddClick: () => void;
 }
 
-const Column = ({ title, tasks, status, onStatusChange }: ColumnProps) => {
+const Column = ({ title, tasks, status, onStatusChange, onAddClick }: ColumnProps) => {
   return (
     <div className="bg-blue-200 rounded-xl p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center px-2">
@@ -17,7 +18,9 @@ const Column = ({ title, tasks, status, onStatusChange }: ColumnProps) => {
             {title}
             <span className="hidden">{status}</span>
           </h2>
-          <button className="font-bold text-lg text-gray-500 text-center hover:text-blue-700 cursor-pointer">
+          <button
+            onClick={onAddClick} 
+            className="font-bold text-lg text-gray-500 text-center hover:text-blue-700 cursor-pointer">
             +
           </button>
         </div>

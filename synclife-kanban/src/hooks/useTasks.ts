@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Task, TaskStatus } from '../types/task';
+import type { Task, TaskStatus, TaskPriority } from '../types/task';
 import { INITIAL_TASKS } from '../constants/initialData';
 
 const STORAGE_KEY = 'synclife_tasks';
@@ -35,5 +35,18 @@ export const useTasks = () => {
     saveTasks(updated);
   };
 
-  return { tasks, updateTaskStatus };
+  const addTask = (title: string, description: string, priority: TaskPriority, status: TaskStatus) => {
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      title,
+      description,
+      status,
+      priority,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    saveTasks([newTask, ...tasks]);
+  };
+
+  return { tasks, updateTaskStatus, addTask };
 };
