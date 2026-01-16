@@ -5,7 +5,7 @@ import AddTaskModal from './components/kanban/AddTaskModal';
 import type { TaskStatus } from './types/task';
 
 const KanbanBoard = () => {
-  const { tasks, updateTaskStatus, addTask } = useTasks();
+  const { tasks, updateTaskStatus, addTask, deleteTask } = useTasks();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetStatus, setTargetStatus] = useState<TaskStatus>('todo');
 
@@ -31,20 +31,23 @@ const KanbanBoard = () => {
           status="todo" 
           onStatusChange={updateTaskStatus}
           onAddClick={() => openModal('todo')}
+          onDelete = {deleteTask}
         />
         <Column 
           title="In Progress" 
           tasks={inProgressTasks} 
           status="in-progress" 
           onStatusChange={updateTaskStatus}
-          onAddClick={() => openModal('in-progress')} 
+          onAddClick={() => openModal('in-progress')}
+          onDelete = {deleteTask} 
         />
         <Column 
           title="Done" 
           tasks={doneTasks} 
           status="done" 
           onStatusChange={updateTaskStatus}
-          onAddClick={() => openModal('done')} 
+          onAddClick={() => openModal('done')}
+          onDelete = {deleteTask} 
         />
       </main>
       <AddTaskModal 

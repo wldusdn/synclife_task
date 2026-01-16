@@ -48,5 +48,11 @@ export const useTasks = () => {
     saveTasks([newTask, ...tasks]);
   };
 
-  return { tasks, updateTaskStatus, addTask };
+  const deleteTask = (id:string) => {
+    if (window.confirm('정말 이 태스크를 삭제하시겠습니까?')){
+      saveTasks(tasks.filter(task => task.id !== id))
+    }
+  };
+
+  return { tasks, updateTaskStatus, addTask, deleteTask };
 };

@@ -8,9 +8,10 @@ interface ColumnProps {
   status: TaskStatus;
   onStatusChange: (id: string, status: TaskStatus) => void;
   onAddClick: () => void;
+  onDelete: (id: string) => void;
 }
 
-const Column = ({ title, tasks, status, onStatusChange, onAddClick }: ColumnProps) => {
+const Column = ({ title, tasks, status, onStatusChange, onAddClick, onDelete }: ColumnProps) => {
   const [isOver, setIsOver] = useState(false);
   
   const handleDragOver = (e: React.DragEvent) => {
@@ -58,7 +59,8 @@ const Column = ({ title, tasks, status, onStatusChange, onAddClick }: ColumnProp
         {tasks.map((task) => (
           <TaskCard 
             key={task.id} 
-            task={task} 
+            task={task}
+            onDelete={onDelete} 
           />
         ))}
         {tasks.length === 0 && (
